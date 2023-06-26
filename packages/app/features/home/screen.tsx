@@ -1,17 +1,22 @@
-import {
-  Anchor,
-  Button,
-  H1,
-  Paragraph,
-  Separator,
-  Sheet,
-  useToastController,
-  XStack,
-  YStack,
-} from '@my/ui'
-import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
-import React, { useState } from 'react'
+import { XStack, YStack, Image, styled } from '@my/ui'
+
+import React from 'react'
 import { useLink } from 'solito/link'
+import { MotiLink } from 'solito/moti'
+import { SolitoImage } from 'solito/image'
+import NextImage from 'next/image'
+import { Image as RNImage } from 'react-native'
+
+import { myParagraphs } from 'app/assets/my-paragraphs'
+import { MyP } from 'app/components/sections'
+import { MyH1, Subtitle } from 'app/components/my-texts'
+import { FormattedBlock } from 'app/components/sections'
+import { MyBoxL, MyBoxS } from 'app/components/my-boxes'
+import { Buttons } from 'app/components/my-buttons'
+
+import { namedColors, hexColors } from 'app/assets/box-colors'
+import christmas from '../../assets/images/christmas.png'
+import kitten from '../../assets/images/kitten.jpg'
 
 export function HomeScreen() {
   const linkProps = useLink({
@@ -19,79 +24,138 @@ export function HomeScreen() {
   })
 
   return (
-    <YStack f={1} jc="center" ai="center" p="$4" space>
-      <YStack space="$4" maw={600}>
-        <H1 ta="center">Welcome to Tamagui.</H1>
-        <Paragraph ta="center">
-          Here's a basic starter to show navigating from one screen to another. This screen uses the
-          same code on Next.js and React Native.
-        </Paragraph>
-
-        <Separator />
-        <Paragraph ta="center">
-          Made by{' '}
-          <Anchor color="$color12" href="https://twitter.com/natebirdman" target="_blank">
-            @natebirdman
-          </Anchor>
-          ,{' '}
-          <Anchor
-            color="$color12"
-            href="https://github.com/tamagui/tamagui"
-            target="_blank"
-            rel="noreferrer"
-          >
-            give it a ⭐️
-          </Anchor>
-        </Paragraph>
-      </YStack>
-
-      <XStack>
-        <Button {...linkProps}>Link to user</Button>
-      </XStack>
-
-      <SheetDemo />
+    <YStack
+      f={1}
+      jc="center"
+      ai="center"
+      p="$4"
+      m="$8"
+      gap="$8"
+      $gtXs={{
+        m: '$16',
+        gap: '$16',
+      }}
+    >
+      <Title />
+      <Paragraphs />
+      <SeparateBoxes />
+      <Drawings2 />
+      <BoxList />
+      <Buttons />
     </YStack>
   )
 }
 
-function SheetDemo() {
-  const [open, setOpen] = useState(false)
-  const [position, setPosition] = useState(0)
-  const toast = useToastController()
-
+function Title() {
   return (
-    <>
-      <Button
-        size="$6"
-        icon={open ? ChevronDown : ChevronUp}
-        circular
-        onPress={() => setOpen((x) => !x)}
-      />
-      <Sheet
-        modal
-        open={open}
-        onOpenChange={setOpen}
-        snapPoints={[80]}
-        position={position}
-        onPositionChange={setPosition}
-        dismissOnSnapToBottom
+    <XStack>
+      <MyH1>Solito example app with</MyH1>
+      <MotiLink
+        href="https://tamagui.dev/"
+        animate={({ hovered, pressed }) => {
+          'worklet'
+          return {
+            scale: pressed ? 0.9 : hovered ? 1.1 : 1,
+          }
+        }}
       >
-        <Sheet.Overlay />
-        <Sheet.Frame ai="center" jc="center">
-          <Sheet.Handle />
-          <Button
-            size="$6"
-            circular
-            icon={ChevronDown}
-            onPress={() => {
-              setOpen(false)
-              toast.show('Sheet closed!', {
-                message: 'Just showing how toast works...',
-              })
-            }}
+        <MyH1 color="$primary">Tamagui</MyH1>
+      </MotiLink>
+    </XStack>
+  )
+}
+
+function Paragraphs() {
+  return (
+    <YStack maxWidth={1024}>
+      {myParagraphs.map((p, i) => (
+        <MyP fontFamily={p[0]} key={i}>
+          {[p[1], p[2]]}
+        </MyP>
+      ))}
+    </YStack>
+  )
+}
+
+function SeparateBoxes() {
+  return (
+    <FormattedBlock gap="$4" flexWrap="wrap">
+      {[
+        'Individual boxes with named colors:',
+        namedColors.map((color, i) => <MyBoxL backgroundColor={color} key={color + i} />),
+      ]}
+    </FormattedBlock>
+  )
+}
+
+/*
+function Drawings() {
+  return (
+    <FormattedBlock gap="$2" justifyContent="center" flexWrap="wrap">
+      {[
+        'Cute drawings:',
+        <>
+          <Image
+            style={{ width: 600, height: 400 }}
+            source={christmas}
+            resizeMode="contain"
+            w="100%"
+            h="100%"
+            $xs={{ w: '75%', h: '75%' }}
+            alt="A cute drawing for SasuSaku family on a Christmas day."
           />
-        </Sheet.Frame>
-      </Sheet>
-    </>
+          <Image
+            style={{ width: 400, height: 400 }}
+            source={kitten}
+            resizeMode="contain"
+            w="100%"
+            h="100%"
+            $xs={{ w: '75%', h: '75%' }}
+            alt="A cute Sasuke kitten with cherry blossom."
+          />
+        </>,
+      ]}
+    </FormattedBlock>
+  )
+}*/
+
+function Drawings2() {
+  return (
+    <YStack gap="$2">
+      <Subtitle>Cute drawings:</Subtitle>
+      <XStack gap="$2" fw="wrap" jc="center">
+        <Image
+          style={{ width: 600, height: 400 }}
+          source={christmas}
+          //src="../../assets/images/christmas.png"
+          resizeMode="contain"
+          w="100%"
+          h="100%"
+          $xs={{ w: '75%', h: '75%' }}
+          alt="A cute drawing for SasuSaku family on a Christmas day."
+        />
+        <Image
+          style={{ width: 400, height: 400 }}
+          //src="/../../assets/images/kitten.png"
+          source={kitten}
+          resizeMode="contain"
+          w="100%"
+          h="100%"
+          $xs={{ w: '75%', h: '75%' }}
+          alt="A cute Sasuke kitten with cherry blossom."
+        />
+      </XStack>
+    </YStack>
+  )
+}
+
+function BoxList() {
+  return (
+    <FormattedBlock flexWrap="wrap" maxWidth={1024}>
+      {[
+        'A list of boxes with more colors:',
+        hexColors.map((color, i) => <MyBoxS backgroundColor={color} key={color + i} />),
+      ]}
+    </FormattedBlock>
   )
 }

@@ -1,8 +1,6 @@
 {
   "extends": "../../tsconfig.base",
-  "include": [
-    "src"
-  ],
+  "include": ["src", "../app/assets/box-colors.ts"],
   "compilerOptions": {
     "composite": true,
     "jsx": "react-jsx"
